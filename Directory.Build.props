@@ -1,0 +1,19 @@
+<Project>
+
+  <!--
+    Shared build settings for every project in the solution.
+    Centralised here so the target framework and quality gates are defined once.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Quality gates: warnings fail the build, and IDE code-style rules
+         (.editorconfig) are enforced at build time, not just in the editor. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+</Project>
