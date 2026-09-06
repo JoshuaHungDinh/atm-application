@@ -491,3 +491,6 @@ $RECYCLE.BIN/
 # Frontend (added in PR 5)
 node_modules/
 client/dist/
+
+# Claude Code personal settings
+.claude/settings.local.json
