@@ -7,8 +7,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.11" />
+    <!-- compile assets kept (default) so the design-time DbContext factory can implement
+         IDesignTimeDbContextFactory; PrivateAssets stops it flowing to Atm.Api. -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.11">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.11" />

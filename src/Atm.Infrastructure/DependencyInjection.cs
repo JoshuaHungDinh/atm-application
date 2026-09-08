@@ -1,3 +1,6 @@
+using Atm.Application.Abstractions;
+using Atm.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,9 +16,13 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // In PR 3 this registers AtmDbContext against
-        // configuration.GetConnectionString("AtmDb") plus the repository.
-        _ = configuration;
+        string connectionString = configuration.GetConnectionString("AtmDb")
+            ?? throw new InvalidOperationException("Connection string 'AtmDb' is not configured.");
+
+        services.AddDbContext<AtmDbContext>(options => options.UseSqlite(connectionString));
+        services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<AccountSeeder>();
+
         return services;
     }
 }
