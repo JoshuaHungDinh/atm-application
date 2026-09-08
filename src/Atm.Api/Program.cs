@@ -1,5 +1,6 @@
 using Atm.Application;
 using Atm.Infrastructure;
+using Atm.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,9 @@ builder.Services.AddCors(options =>
         .AllowAnyMethod()));
 
 var app = builder.Build();
+
+// Create/upgrade the SQLite database and seed the two accounts before serving traffic.
+await app.Services.InitializeAtmDatabaseAsync();
 
 // --- HTTP pipeline ---
 if (app.Environment.IsDevelopment())
