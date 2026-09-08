@@ -58,8 +58,25 @@ tests/
 dotnet run --project src/Atm.Api
 ```
 
+On first start the app creates a SQLite database at `src/Atm.Api/atm.db`, applies the
+migrations, and seeds the two accounts (`Checking`, `Savings`). The file persists between
+runs — delete it to start over. The connection string lives in
+`src/Atm.Api/appsettings.json`.
+
 Ports are defined in `src/Atm.Api/Properties/launchSettings.json`. In Development the
 OpenAPI document is served at `/openapi/v1.json`; `GET /health` returns `{"status":"ok"}`.
+
+### Adding a migration
+
+The EF Core CLI is pinned in `.config/dotnet-tools.json`:
+
+```bash
+dotnet tool restore
+dotnet ef migrations add <Name> --project src/Atm.Infrastructure --startup-project src/Atm.Infrastructure
+```
+
+A design-time factory (`AtmDbContextFactory`) builds the context, so the API host does not
+need to start. Applying migrations needs nothing extra — the app does it on startup.
 
 ## Test
 
