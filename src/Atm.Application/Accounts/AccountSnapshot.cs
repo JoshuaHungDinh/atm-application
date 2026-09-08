@@ -14,6 +14,7 @@ public sealed record AccountSnapshot(
         ArgumentNullException.ThrowIfNull(account);
 
         TransactionSnapshot[] history = account.Transactions
+            .OrderBy(t => t.OccurredAt)
             .Select(t => new TransactionSnapshot(
                 t.Id, t.Type, t.Amount, t.BalanceAfter, t.OccurredAt, t.Description))
             .ToArray();
