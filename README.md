@@ -78,6 +78,27 @@ dotnet ef migrations add <Name> --project src/Atm.Infrastructure --startup-proje
 A design-time factory (`AtmDbContextFactory`) builds the context, so the API host does not
 need to start. Applying migrations needs nothing extra — the app does it on startup.
 
+## API
+
+All endpoints return JSON. Failures are RFC 7807 `application/problem+json` with a `title`
+and `detail`.
+
+| Method | Route | Body | Success | Errors |
+|--------|-------|------|---------|--------|
+| `GET` | `/accounts` | — | `200` — every account with balance and history | — |
+| `POST` | `/accounts/{id}/deposit` | `{ "amount": 50.00 }` | `200` — the updated account | `404` unknown account · `422` invalid amount |
+| `POST` | `/accounts/{id}/withdraw` | `{ "amount": 50.00 }` | `200` — the updated account | `404` · `409` insufficient funds · `422` invalid amount |
+| `POST` | `/transfers` | `{ "fromAccountId": "…", "toAccountId": "…", "amount": 50.00 }` | `200` — both updated accounts | `404` · `409` insufficient funds · `422` invalid / same-account transfer |
+
+Amounts must be positive with at most two decimal places — the domain enforces this and a
+violation maps to `422`; malformed JSON returns `400`.
+
+```bash
+curl -s localhost:5078/accounts
+curl -s -X POST localhost:5078/accounts/<id>/deposit \
+  -H 'Content-Type: application/json' -d '{"amount":25.00}'
+```
+
 ## Test
 
 ```bash
