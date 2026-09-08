@@ -11,6 +11,13 @@ public sealed class Account
 {
     private readonly List<Transaction> _transactions = [];
 
+    // Parameterless constructor for EF Core materialization only. Real construction goes
+    // through the public constructor below, which enforces the invariants.
+    private Account()
+    {
+        Name = string.Empty;
+    }
+
     public Account(Guid id, string name, decimal openingBalance = 0m)
     {
         if (id == Guid.Empty)
