@@ -37,3 +37,7 @@ csharp_style_var_elsewhere = false:suggestion
 csharp_style_expression_bodied_methods = false:silent
 csharp_style_prefer_primary_constructors = true:suggestion
 csharp_prefer_simple_using_statement = true:suggestion
+
+# EF Core migrations are tool-generated; don't hold them to the style rules above.
+[**/Migrations/*.cs]
+generated_code = true
