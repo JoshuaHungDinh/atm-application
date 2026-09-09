@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+using Atm.Api.ErrorHandling;
 using Atm.Application;
 using Atm.Infrastructure;
 using Atm.Infrastructure.Persistence;
@@ -5,8 +7,13 @@ using Atm.Infrastructure.Persistence;
 var builder = WebApplication.CreateBuilder(args);
 
 // --- Services ---
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddOpenApi();
+
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<DomainExceptionHandler>();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -24,6 +31,8 @@ var app = builder.Build();
 await app.Services.InitializeAtmDatabaseAsync();
 
 // --- HTTP pipeline ---
+app.UseExceptionHandler();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi(); // serves /openapi/v1.json
@@ -34,3 +43,6 @@ app.UseCors(frontendCorsPolicy);
 app.MapControllers();
 
 app.Run();
+
+/// <summary>Exposed so <c>WebApplicationFactory&lt;Program&gt;</c> can bootstrap the API in tests.</summary>
+public partial class Program;
