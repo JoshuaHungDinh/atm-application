@@ -44,13 +44,14 @@ src/
   Atm.Infrastructure/  EF Core DbContext + repository
   Atm.Api/             controllers, HTTP concerns
 tests/
-  Atm.UnitTests/        domain + application tests
+  Atm.UnitTests/        domain, persistence, and API tests
+client/                 React + TypeScript SPA
 ```
 
 ## Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download) — `brew install --cask dotnet-sdk` on macOS
-- Node 20+ — for the frontend (from PR 5)
+- Node 20+ — for the `client/` frontend
 
 ## Run
 
@@ -99,7 +100,25 @@ curl -s -X POST localhost:5078/accounts/<id>/deposit \
   -H 'Content-Type: application/json' -d '{"amount":25.00}'
 ```
 
+## Frontend
+
+A React + TypeScript SPA in `client/`. Run it alongside the API:
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+The dev server runs on `http://localhost:5173` and proxies `/accounts` and `/transfers`
+to the API on `:5078`, so start `dotnet run --project src/Atm.Api` first. `npm run build`
+produces a production bundle in `client/dist/`.
+
 ## Test
+
+```bash
+dotnet test
+```
 
 ```bash
 dotnet test
